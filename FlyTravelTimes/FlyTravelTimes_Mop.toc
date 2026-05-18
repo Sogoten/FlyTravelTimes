@@ -1,0 +1,11 @@
+## Interface: 50503
+## Title: FlyTravelTimes
+## Notes: Shows a progress bar with remaining flight time for all flight paths
+## Author: Sogoten
+## Version: 1.1.5
+## SavedVariables: FlyTravelTimesDB
+
+Locale.lua
+BarStyles.lua
+FlightData.lua
+Core.lua
