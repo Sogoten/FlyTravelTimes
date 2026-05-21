@@ -1,0 +1,7 @@
+package-as: FlyTravelTimes
+
+ignore:
+  - .github
+  - .pkgmeta
+  - CHANGELOG.md
+  - README.md
