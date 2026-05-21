@@ -1,5 +1,7 @@
 package-as: FlyTravelTimes
 
+enable-nolib-creation: no
+
 ignore:
   - .github
   - .pkgmeta
