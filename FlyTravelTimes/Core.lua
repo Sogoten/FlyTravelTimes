@@ -120,6 +120,14 @@ local function ApplyFontSize(size)
     timerFrame.routeLabel:SetFont("Fonts\\FRIZQT__.TTF", math.max(size - 2, 8), "OUTLINE")
 end
 
+-- Format time as MM:SS
+local function FormatTime(seconds)
+    if not seconds then return "??:??" end
+    local mins = math.floor(seconds / 60)
+    local secs = math.floor(seconds % 60)
+    return string.format("%d:%02d", mins, secs)
+end
+
 -- Make it movable (respects lock state)
 timerFrame:SetMovable(true)
 timerFrame:EnableMouse(true)
@@ -134,6 +142,24 @@ timerFrame:SetScript("OnDragStop", function(self)
     local point, _, _, x, y = self:GetPoint()
     FlyTravelTimesDB.posX = x
     FlyTravelTimesDB.posY = y
+end)
+
+-- Shift + Left Click: insert ETA message into active chat box
+timerFrame:SetScript("OnMouseDown", function(self, button)
+    if button == "LeftButton" and IsShiftKeyDown() then
+        if sourceNode and destNode and flightStartTime and flightDuration then
+            local remaining = flightDuration - (GetTime() - flightStartTime)
+            if remaining < 0 then remaining = 0 end
+            local msg = string.format("<%s > %s>  ETA: %s", sourceNode, destNode, FormatTime(remaining))
+            local editBox = ChatEdit_GetActiveWindow and ChatEdit_GetActiveWindow()
+            if editBox then
+                editBox:Insert(msg)
+            else
+                -- Fallback: open Say and insert
+                ChatFrame_OpenChat(msg)
+            end
+        end
+    end
 end)
 
 -- Background
@@ -179,14 +205,6 @@ timerFrame.bar.spark:SetTexture("Interface\\CastingBar\\UI-CastingBar-Spark")
 timerFrame.bar.spark:SetBlendMode("ADD")
 timerFrame.bar.spark:SetSize(20, timerFrame.bar:GetHeight() * 2.5)
 
--- Format time as MM:SS
-local function FormatTime(seconds)
-    if not seconds then return "??:??" end
-    local mins = math.floor(seconds / 60)
-    local secs = math.floor(seconds % 60)
-    return string.format("%d:%02d", mins, secs)
-end
-
 -- Start flight timer
 function FTT:StartFlightTimer(duration, fromNode, toNode)
     if not FlyTravelTimesDB.enabled then return end
@@ -205,7 +223,8 @@ function FTT:StartFlightTimer(duration, fromNode, toNode)
     
     if FlyTravelTimesDB.showEstimate then
         local L = FTT.L or {}
-        print(string.format("|cff00ff00%s:|r %s", L["ADDON_NAME"] or "FlyTravelTimes", string.format(L["FLIGHT_TIME"] or "Estimated flight time: %s", FormatTime(duration))))
+        print(string.format("|cff00ff00FlyTravelTimes:|r %s",
+            string.format(L["FLIGHT_TIME"] or "Estimated flight time: %s", FormatTime(duration))))
     end
 end
 

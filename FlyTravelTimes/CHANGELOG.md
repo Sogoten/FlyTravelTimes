@@ -2,6 +2,14 @@
 
 All notable changes to FlyTravelTimes will be documented in this file.
 
+## [1.1.6] - 2026-05-22
+
+### Changed
+- 💬 **Improved chat message format** - The automatic flight notification now shows only the estimated flight time (e.g. `FlyTravelTimes: Estimated flight time: 6:57`), keeping it clean and simple.
+- 📢 **Shift + Left Click to share ETA** - Clicking the progress bar while holding Shift now inserts a shareable message into your active chat box: `[FlyTravelTimes] <Orgrimmar > Gadgetzan>  ETA: 6:57`. Works with any chat channel (Say, Party, Guild, etc.).
+
+---
+
 ## [1.1.5] - 2026-05-15
 
 ### Added
