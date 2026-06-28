@@ -69,6 +69,9 @@ end
 
 -- Get flight time between two nodes BY NAME
 function FTT:GetFlightTime(fromName, toName)
+    -- Translate localized node names to English before lookup
+    fromName = FlyTravelTimes:TranslateNodeName(fromName)
+    toName = FlyTravelTimes:TranslateNodeName(toName)
     local version = GetGameVersion()
     local faction = GetPlayerFaction()
     

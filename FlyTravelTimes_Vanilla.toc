@@ -8,4 +8,5 @@
 Locale.lua
 BarStyles.lua
 FlightData.lua
+LocaleNodeNames.lua
 Core.lua
