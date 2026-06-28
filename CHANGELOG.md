@@ -2,6 +2,16 @@
 
 All notable changes to FlyTravelTimes will be documented in this file.
 
+## [1.1.7] - 2026-06-29
+
+### Added
+- 🌍 **German & French flight node support** - Added `LocaleNodeNames.lua` with mappings for German (deDE) and French (frFR) flight node names → English. Players on non-English clients no longer see "Flight path not in database" errors.
+  - **Note: this initial release covers TBC Horde nodes only.** Support for other versions (Vanilla, WotLK, Cata) and Alliance will be added in future updates.
+  - 53 German (deDE) TBC Horde nodes mapped
+  - 53 French (frFR) TBC Horde nodes mapped
+
+---
+
 ## [1.1.6] - 2026-05-22
 
 ### Changed

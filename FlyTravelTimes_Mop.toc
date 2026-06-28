@@ -2,7 +2,7 @@
 ## Title: FlyTravelTimes
 ## Notes: Shows a progress bar with remaining flight time for all flight paths
 ## Author: Sogoten
-## Version: 1.1.6
+## Version: 1.1.7
 ## SavedVariables: FlyTravelTimesDB
 
 Locale.lua
