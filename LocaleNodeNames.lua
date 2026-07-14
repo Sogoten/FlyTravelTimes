@@ -125,13 +125,67 @@ FlyTravelTimes.LocaleNodeNames["frFR"] = {
     ["Zul'Aman, Terres fantômes"]                               = "Zul'Aman",
 }
 
--- Translate a node name to English using the current locale mapping
+-- Strip ", Zone Name" suffix, e.g. "Beutebucht, Schlingendorntal" -> "Beutebucht"
+local function StripZoneSuffix(name)
+    if not name then return name end
+    return name:match("^(.-)%s*,.*$") or name
+end
+
+-- Lazily-built cache: locale -> { strippedKey = englishName }
+-- Lets us match localized names regardless of whether the client
+-- included the zone suffix or not.
+local strippedMapCache = {}
+
+local function GetStrippedMap(locale)
+    if strippedMapCache[locale] then
+        return strippedMapCache[locale]
+    end
+    local map = FlyTravelTimes.LocaleNodeNames[locale]
+    if not map then return nil end
+
+    local stripped = {}
+    for key, englishName in pairs(map) do
+        local strippedKey = StripZoneSuffix(key)
+        if not stripped[strippedKey] then
+            stripped[strippedKey] = englishName
+        end
+    end
+    strippedMapCache[locale] = stripped
+    return stripped
+end
+
+-- Translate a node name to English using the current locale mapping.
+-- Tries, in order: exact match, then zone-suffix-agnostic match on
+-- both the input name and the stored keys, so mismatches like the
+-- client returning "Beutebucht" while the DB key is
+-- "Beutebucht, Schlingendorntal" (or vice versa) still resolve.
 function FlyTravelTimes:TranslateNodeName(name)
     if not name then return name end
     local locale = GetLocale()
     local map = FlyTravelTimes.LocaleNodeNames[locale]
-    if map and map[name] then
+    if not map then return name end
+
+    -- Exact match
+    if map[name] then
         return map[name]
     end
+
+    -- Input has a zone suffix the DB key doesn't
+    local strippedName = StripZoneSuffix(name)
+    if strippedName ~= name and map[strippedName] then
+        return map[strippedName]
+    end
+
+    -- DB key has a zone suffix the input doesn't (or neither does)
+    local strippedMap = GetStrippedMap(locale)
+    if strippedMap then
+        if strippedMap[name] then
+            return strippedMap[name]
+        end
+        if strippedMap[strippedName] then
+            return strippedMap[strippedName]
+        end
+    end
+
     return name
 end
